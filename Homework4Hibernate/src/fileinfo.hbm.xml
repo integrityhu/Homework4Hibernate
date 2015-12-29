@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="hu.infokristaly.hibernate.model.FileInfo" table="FileInfo"
+		node="fileInfo">
+		<id name="id" column="id" node="@id">
+			<generator class="native" />
+		</id>
+		<property name="fileName" node="fileName" />
+		<property name="size" node="size" />
+		<property name="dir" node="dir" />
+		<property name="path" type="text" column="path" node="path" />
+		<property name="lastModified" node="lastModified" />
+		<property name="uploadDate" node="uploadDate" />
+	</class>
+
+	<class name="hu.infokristaly.hibernate.model.MediaInfo" table="MediaInfo"
+		node="mediaInfo">
+        <id name="id" column="id" node="@id">
+            <generator class="native" />
+        </id>
+        <property name="name" column="name" node="name"
+            index="IDX_NAME" />
+        <property name="comment" type="text" column="comment" node="comment" />
+	</class>
+
+    <class name="hu.infokristaly.hibernate.model.LocationInfo" table="LocationInfo"
+        node="locationInfo">
+        <id name="id" column="id" node="@id">
+            <generator class="native" />
+        </id>
+        <property name="place" column="place" node="place"
+            index="IDX_PLACE" />
+        <property name="comment" type="text" column="comment" node="comment" />
+    </class>
+    
+	<class name="hu.infokristaly.hibernate.model.FileSystemInfo"
+		table="FileSystemInfo" node="fileSystemInfo">
+		<id name="id" column="id" node="@id">
+			<generator class="native" />
+		</id>
+        <property name="name" column="name" node="name"
+            index="IDX_NAME" />
+		<property name="path" type="text" column="path" node="path"
+			index="IDX_PATH" />
+		<property name="lastModified" node="lastModified" index="IDX_LASTMODIFIED" />
+		<property name="uploadDate" node="uploadDate" index="IDX_UPLOADED" />
+        <property name="comment" type="text" column="comment" node="comment"
+            index="IDX_COMMENT" />
+		<many-to-one name="mediaInfo"
+			class="hu.infokristaly.hibernate.model.MediaInfo" column="mediainfo_id" />
+        <many-to-one name="locationInfo"
+            class="hu.infokristaly.hibernate.model.LocationInfo" column="location_id" />
+	</class>
+
+	<class name="hu.infokristaly.hibernate.model.FileSystemDirInfo"
+		table="FileSystemDirInfo" node="fileSystemDirInfo">
+		<id name="id" column="id" node="@id">
+			<generator class="native" />
+		</id>
+		<property name="path" type="text" column="path" node="path"
+			index="IDX_PATH" />
+		<property name="lastModified" node="lastModified" index="IDX_LASTMODIFIED" />
+		<property name="uploadDate" node="uploadDate" index="IDX_UPLOADED" />
+        <property name="comment" type="text" column="comment" node="comment"
+            index="IDX_COMMENT" />
+		<many-to-one name="parentDirInfo"
+			class="hu.infokristaly.hibernate.model.FileSystemDirInfo" column="directory_id" />
+        <many-to-one name="fileSystemInfo"
+            class="hu.infokristaly.hibernate.model.FileSystemInfo" column="filesystem_id" />
+	</class>
+
+	<class name="hu.infokristaly.hibernate.model.FileSystemFileInfo"
+		table="FileSystemFileInfo" node="fileSystemFileInfo">
+		<id name="id" column="id" node="@id">
+			<generator class="native" />
+		</id>
+		<property name="fileName" node="fileName" index="IDX_NAME" />
+		<property name="size" node="size" index="IDX_SIZE" />
+		<property name="lastModified" node="lastModified" index="IDX_LASTMODIFIED" />
+		<property name="uploadDate" node="uploadDate" index="IDX_UPLOADED" />
+        <property name="comment" type="text" column="comment" node="comment"
+            index="IDX_COMMENT" />
+		<many-to-one name="dirInfo"
+			class="hu.infokristaly.hibernate.model.FileSystemDirInfo" column="directory_id" />
+	</class>
+
+	<query name="findFileSystemDirInfo">
+        <![CDATA[from FileSystemDirInfo where path = :path and fileSystemInfo = :fileSystemInfo]]>
+	</query>
+
+</hibernate-mapping>
